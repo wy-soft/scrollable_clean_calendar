@@ -67,27 +67,26 @@ class CleanCalendarController extends ChangeNotifier {
     DateTime currentDate = DateTime(minDate.year, minDate.month);
     months.add(currentDate);
 
-    while (!(currentDate.year == maxDate.year &&
-        currentDate.month == maxDate.month)) {
+    while (!(currentDate.year == maxDate.year && currentDate.month == maxDate.month)) {
       currentDate = DateTime(currentDate.year, currentDate.month + 1);
       months.add(currentDate);
     }
 
-    if (initialDateSelected != null &&
-        (initialDateSelected!.isAfter(minDate) ||
-            initialDateSelected!.isSameDay(minDate))) {
+    if (initialDateSelected != null && (initialDateSelected!.isAfter(minDate) || initialDateSelected!.isSameDay(minDate))) {
       onDayClick(initialDateSelected!, update: false);
     }
 
-    if (endDateSelected != null &&
-        (endDateSelected!.isBefore(maxDate) ||
-            endDateSelected!.isSameDay(maxDate))) {
+    if (endDateSelected != null && (endDateSelected!.isBefore(maxDate) || endDateSelected!.isSameDay(maxDate))) {
       onDayClick(endDateSelected!, update: false);
     }
   }
 
   DateTime? rangeMinDate;
   DateTime? rangeMaxDate;
+
+  /// 这里为了改变相关模式的状态，所以添加了这个方法
+  bool? _rawReadOnly;
+  bool get rawReadOnly => _rawReadOnly ?? readOnly;
 
   List<String> getDaysOfWeek([String locale = 'pt']) {
     var today = DateTime.now();
@@ -179,14 +178,9 @@ class CleanCalendarController extends ChangeNotifier {
         (date.year < maxDate.year || date.month <= maxDate.month))) {
       return;
     }
-    final month =
-        ((date.year - minDate.year) * 12) - minDate.month + date.month;
+    final month = ((date.year - minDate.year) * 12) - minDate.month + date.month;
     await itemScrollController.scrollTo(
-        index: month,
-        alignment: alignment,
-        duration: duration,
-        curve: curve,
-        opacityAnimationWeights: opacityAnimationWeights);
+        index: month, alignment: alignment, duration: duration, curve: curve, opacityAnimationWeights: opacityAnimationWeights);
   }
 
   /// Jump to [date.month].
@@ -214,8 +208,13 @@ class CleanCalendarController extends ChangeNotifier {
         (date.year < maxDate.year || date.month <= maxDate.month))) {
       return;
     }
-    final month =
-        ((date.year - minDate.year) * 12) - minDate.month + date.month;
+    final month = ((date.year - minDate.year) * 12) - minDate.month + date.month;
     itemScrollController.jumpTo(index: month, alignment: alignment);
+  }
+
+  /// change the rawReadOnly
+  void changeRawReadOnly(bool readOnly) {
+    _rawReadOnly = readOnly;
+    notifyListeners();
   }
 }
