@@ -214,7 +214,9 @@ class CleanCalendarController extends ChangeNotifier {
 
   /// change the rawReadOnly
   void changeRawReadOnly(bool readOnly) {
-    _rawReadOnly = readOnly;
-    notifyListeners();
+    if (rawReadOnly != readOnly) {
+      _rawReadOnly = readOnly;
+      notifyListeners();
+    }
   }
 }
