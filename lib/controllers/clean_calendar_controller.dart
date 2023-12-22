@@ -88,6 +88,9 @@ class CleanCalendarController extends ChangeNotifier {
   bool? _rawReadOnly;
   bool get rawReadOnly => _rawReadOnly ?? readOnly;
 
+  bool? _rawRangeMode;
+  bool get rawRangeMode => _rawRangeMode ?? rangeMode;
+
   List<String> getDaysOfWeek([String locale = 'pt']) {
     var today = DateTime.now();
 
@@ -109,7 +112,7 @@ class CleanCalendarController extends ChangeNotifier {
   }
 
   void onDayClick(DateTime date, {bool update = true}) {
-    if (rangeMode) {
+    if (rawRangeMode) {
       if (rangeMinDate == null || rangeMaxDate != null) {
         rangeMinDate = date;
         rangeMaxDate = null;
@@ -216,6 +219,14 @@ class CleanCalendarController extends ChangeNotifier {
   void changeRawReadOnly(bool readOnly) {
     if (rawReadOnly != readOnly) {
       _rawReadOnly = readOnly;
+      notifyListeners();
+    }
+  }
+
+  /// change the rawRangeMode
+  void changeRawRangeMode(bool rangeMode) {
+    if (rawRangeMode != rangeMode) {
+      _rawRangeMode = rangeMode;
       notifyListeners();
     }
   }
